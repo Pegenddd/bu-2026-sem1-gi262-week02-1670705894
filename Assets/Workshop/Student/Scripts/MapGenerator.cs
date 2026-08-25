@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Workshop.Student
@@ -19,15 +20,28 @@ namespace Workshop.Student
         };
 
         // 1. declare Players variable
+        public GameObject[] player;
 
         // 7. declare Exit variable 
-
+        public GameObject[] Exit;
 
         public void Start()
         {
-            // 1. random player at the position <0, 0> map
 
+            // 1. random player at the position <0, 0> map
+            for (int i = 0; i < player.Length; i++)
+            {
+                int r = UnityEngine.Random.Range(0, player.Length);
+                GameObject playerObj = Instantiate(player[r], new Vector2(0, 0), Quaternion.identity);
+                playerObj.name = "Player" + r;
+            }
             // 2. create obstacles
+            for (int i = 0; i < wallTiles.Length; i++)
+            {
+                int r = UnityEngine.Random.Range(0, wallTiles.Length);
+                GameObject tile = Instantiate(wallTiles[0], new Vector2(5, i), Quaternion.identity);
+                tile.name = "wall" + 5 + "_" + i;
+            }
 
             // 3. create floor
             for (int y = 0; y < rows; y++)
@@ -36,7 +50,7 @@ namespace Workshop.Student
                 {
                     int r = UnityEngine.Random.Range(0, floorTiles.Length);
                     GameObject tile = Instantiate(floorTiles[r], new Vector2(x, y), Quaternion.identity);
-                    tile.name = "Floor" + x + "_" + y;
+                    tile.name = "floor" + x + "_" + y;
                 }
             }
 
@@ -47,21 +61,21 @@ namespace Workshop.Student
                 {
                     if (x == -1 || x == columns || y == -1 || y == rows)
                     {
-
                         int r = UnityEngine.Random.Range(0, wallTiles.Length);
                         GameObject tile = Instantiate(wallTiles[r], new Vector2(x, y), Quaternion.identity);
-                        tile.name = "Wall" + x + "_" + y;
+                        tile.name = "wall" + x + "_" + y;
                     }
+
                 }
             }
             // 5. random foods
-            int numberOfFood = UnityEngine.Random.Range(1, 3);
-            for (int i = 0; i < numberOfFood; i++)
+            int numberOffoods = UnityEngine.Random.Range(1, 6);
+            for (int i = 0; i < numberOffoods; i++)
             {
-                int x_Food = UnityEngine.Random.Range(0, columns);
-                int y_Food = UnityEngine.Random.Range(0, rows);
+                int x2 = UnityEngine.Random.Range(0, columns);
+                int y2 = UnityEngine.Random.Range(0, rows);
                 int r = UnityEngine.Random.Range(0, foodTiles.Length);
-                Instantiate(foodTiles[0], new Vector2(x_Food, y_Food), Quaternion.identity);
+                Instantiate(foodTiles[r], new Vector2(x2, y2), Quaternion.identity);
             }
 
             // 6. generate item along with the saveItemMap
@@ -71,22 +85,26 @@ namespace Workshop.Student
                 {
                     string item = saveItemMap[x, y];
                     if (!string.IsNullOrEmpty(item))
-                        foreach (var foodTile in foodTiles)
+                    {
+                        foreach (var foodtile in foodTiles)
                         {
-                            if (foodTile.name == item)
+                            if (foodtile.name == item)
                             {
-                                GameObject food = Instantiate(foodTile, new Vector2(x, y), Quaternion.identity);
-                                food.name = item + x + "_" + y;
+                                GameObject food = Instantiate(foodtile, new Vector2(x, y), Quaternion.identity);
+                                food.name = "Food" + x + "_" + y;
                                 break;
                             }
-
                         }
+                    }
                 }
-                // 7. place exit
-
+            }
+            // 7. place exit
+            for (int i = 0; i < Exit.Length; i++)
+            {
+                GameObject exitObj = Instantiate(Exit[0], new Vector2(columns - 1, rows - 1), Quaternion.identity);
+                exitObj.name = "Exit" + i;
             }
         }
     }
-}
-        
 
+}
